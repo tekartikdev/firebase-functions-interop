@@ -33,14 +33,15 @@ library firebase_functions_interop;
 import 'dart:async';
 
 import 'package:firebase_admin_interop/firebase_admin_interop.dart';
+import 'package:firebase_functions_interop/src/params.dart';
 import 'package:js/js.dart' as js;
 import 'package:meta/meta.dart';
-import 'package:node_interop/http.dart';
 import 'package:node_interop/node.dart';
 import 'package:node_interop/util.dart';
 
 import 'src/bindings.dart' as js;
-import 'src/express.dart';
+import 'src/https.dart';
+import 'src/module.dart';
 
 export 'package:firebase_admin_interop/firebase_admin_interop.dart';
 
@@ -52,11 +53,11 @@ export 'src/bindings.dart'
         RuntimeOptions,
         HttpsOptions;
 export 'src/express.dart';
+export 'src/https.dart';
 export 'src/import.dart' show HttpRequest, HttpResponse;
+export 'src/params.dart' show Params;
 
-part 'src/https.dart';
-
-final _module = require('firebase-functions') as js.FirebaseFunctions?;
+final _module = moduleFirebaseFunctions;
 final _moduleV2 = require('firebase-functions/v2') as js.FirebaseFunctions;
 
 /// Main library object which can be used to create and register Firebase
@@ -100,15 +101,18 @@ class FirebaseFunctions {
   /// Authentication functions.
   final AuthFunctions auth;
 
-  FirebaseFunctions._(js.FirebaseFunctions? functions)
+  final Params params;
+
+  FirebaseFunctions._(js.FirebaseFunctions functions)
       : _functions = functions,
         config = Config._(functions),
-        https = HttpsFunctions._(functions),
+        https = HttpsFunctions(functions),
         database = DatabaseFunctions._(functions),
         firestore = FirestoreFunctions._(functions),
         pubsub = PubsubFunctions._(functions),
         storage = StorageFunctions._(functions),
-        auth = AuthFunctions._(functions);
+        auth = AuthFunctions._(functions),
+        params = Params(functions);
 
   /// Configures the regions to which to deploy and run a function.
   ///
