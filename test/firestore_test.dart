@@ -2,6 +2,8 @@
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
 @TestOn('node')
+library;
+
 import 'package:firebase_admin_interop/firebase_admin_interop.dart';
 import 'package:test/test.dart';
 

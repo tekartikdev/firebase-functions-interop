@@ -1,4 +1,6 @@
 @TestOn('node')
+library;
+
 import 'dart:convert';
 
 import 'package:tekartik_http_node/http_universal.dart';
