@@ -13,7 +13,11 @@ import 'package:test/test.dart';
 import 'setup_admin.dart';
 
 void main() {
-  var app = initFirebaseApp();
+  var app = initFirebaseAppOrNull();
+  if (app == null) {
+    return;
+  }
+
   var http = NodeClient(keepAlive: false);
   var baseUrl = '${env['FIREBASE_HTTP_BASE_URL']!}/httpsTests';
   var callableUrl = '${env['FIREBASE_HTTP_BASE_URL']!}/onCallTests';
@@ -21,7 +25,7 @@ void main() {
   group('$HttpsFunctions', () {
     tearDownAll(() async {
       http.close();
-      await app!.delete();
+      await app.delete();
     });
 
     test('get request', () async {
@@ -37,7 +41,7 @@ void main() {
       expect(response.statusCode, 200);
       expect(response.body, 'httpsToDatabase: ok\n');
 
-      var snapshot = await app!
+      var snapshot = await app
           .database()
           .ref('/tests/httpsToDatabase/original')
           .once<String>('value');

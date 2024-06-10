@@ -10,10 +10,13 @@ import 'package:test/test.dart';
 import 'setup_admin.dart';
 
 void main() {
-  var app = initFirebaseApp();
+  var app = initFirebaseAppOrNull();
+  if (app == null) {
+    return;
+  }
 
   Future<void> deletePath(String path) async {
-    var ref = app!.firestore().document(path);
+    var ref = app.firestore().document(path);
 
     await ref.delete();
     var snapshot = await ref.get();
@@ -28,11 +31,11 @@ void main() {
     });
 
     tearDownAll(() async {
-      await app!.delete();
+      await app.delete();
     });
 
     test('uppercase', () async {
-      var ref = app!.firestore().document('tests/uppercase');
+      var ref = app.firestore().document('tests/uppercase');
       var value = 'lowercase${DateTime.now().toIso8601String()}';
       var data = DocumentData();
       data.setString('text', value);

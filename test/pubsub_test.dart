@@ -13,11 +13,14 @@ import 'package:test/test.dart';
 import 'setup_admin.dart';
 
 void main() {
-  var app = initFirebaseApp();
+  var app = initFirebaseAppOrNull();
+  if (app == null) {
+    return;
+  }
 
   group('Pubsub', () {
     tearDownAll(() async {
-      await app!.delete();
+      await app.delete();
     });
 
     test('save to database', () async {
@@ -27,7 +30,7 @@ void main() {
       var exitCode = await exec(command);
       expect(exitCode, 0);
 
-      var snapshot = await app!
+      var snapshot = await app
           .database()
           .ref('/tests/pubsubToDatabase')
           .once<String>('value');

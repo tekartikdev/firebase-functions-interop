@@ -9,7 +9,16 @@ import 'package:node_interop/util.dart';
 
 final Map<String, String> env = Map<String, String>.from(dartify(process.env));
 
-App? initFirebaseApp() {
+App? initFirebaseAppOrNull() {
+  try {
+    return initFirebaseApp();
+  } catch (e) {
+    print('Error initializing Firebase app: $e');
+    return null;
+  }
+}
+
+App initFirebaseApp() {
   if (!env.containsKey('FIREBASE_CONFIG') ||
       !env.containsKey('FIREBASE_SERVICE_ACCOUNT_JSON') ||
       !env.containsKey('FIREBASE_HTTP_BASE_URL')) {
@@ -25,7 +34,7 @@ App? initFirebaseApp() {
   final config = jsonDecode(env['FIREBASE_CONFIG']!) as Map;
   final databaseUrl = config['databaseURL'] as String?;
   return FirebaseAdmin.instance
-      .initializeApp(AppOptions(credential: cert, databaseURL: databaseUrl));
+      .initializeApp(AppOptions(credential: cert, databaseURL: databaseUrl))!;
 //
 //  if (!env.containsKey('FIREBASE_SERVICE_ACCOUNT_FILEPATH') ||
 //      !env.containsKey('FIREBASE_DATABASE_URL') ||

@@ -21,5 +21,5 @@ void main() {
       expect(result['enabled'], 'true');
       expect(result['noSuchKey'], isNull);
     });
-  });
+  }, skip: env['FIREBASE_HTTP_BASE_URL'] == null ? 'no config set' : null);
 }
