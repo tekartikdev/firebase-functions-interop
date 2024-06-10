@@ -1,4 +1,6 @@
 @TestOn('node')
+library;
+
 import 'dart:convert';
 
 import 'package:tekartik_http_node/http_universal.dart';
@@ -19,5 +21,5 @@ void main() {
       expect(result['enabled'], 'true');
       expect(result['noSuchKey'], isNull);
     });
-  });
+  }, skip: env['FIREBASE_HTTP_BASE_URL'] == null ? 'no config set' : null);
 }
